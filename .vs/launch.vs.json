@@ -1,0 +1,18 @@
+{
+  "version": "0.2.1",
+  "defaults": {},
+  "configurations": [
+    {
+      "projectTarget": "application_solar.cpp",
+      "name": "CMakeLists.txt",
+      "project": "CMakeLists.txt",
+      "type": "default"
+    },
+    {
+      "type": "default",
+      "project": "CMakeLists.txt",
+      "projectTarget": "${buildRoot}\\solar_system.exe",
+      "name": "${buildRoot}\\solar_system.exe"
+    }
+  ]
+}
