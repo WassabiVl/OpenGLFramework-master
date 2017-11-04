@@ -10,5 +10,3 @@ struct Planet {
 	float timeDiff;
 
 };
-
-	

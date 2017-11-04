@@ -1,7 +1,5 @@
 #include "application_solar.hpp"
 #include "launcher.hpp"
-#include "planet.h"
-
 
 #include "utils.hpp"
 #include "shader_loader.hpp"
@@ -33,41 +31,21 @@ void ApplicationSolar::render() const {
   // bind shader to upload uniforms
   glUseProgram(m_shaders.at("planet").handle);
 
-  Planet theSun;
+  glm::fmat4 model_matrix = glm::rotate(glm::fmat4{}, float(glfwGetTime()), glm::fvec3{0.0f, 1.0f, 0.0f});
+  model_matrix = glm::translate(model_matrix, glm::fvec3{0.0f, 0.0f, -1.0f});
+  glUniformMatrix4fv(m_shaders.at("planet").u_locs.at("ModelMatrix"),
+                     1, GL_FALSE, glm::value_ptr(model_matrix));
 
-  theSun.scaleX = 2.0f;
-  theSun.scaleY = 2.0f;
-  theSun.scaleZ = 2.0f;
-  theSun.translationX = 1.5;
+  // extra matrix for normal transformation to keep them orthogonal to surface
+  glm::fmat4 normal_matrix = glm::inverseTranspose(glm::inverse(m_view_transform) * model_matrix);
+  glUniformMatrix4fv(m_shaders.at("planet").u_locs.at("NormalMatrix"),
+                     1, GL_FALSE, glm::value_ptr(normal_matrix));
 
-  Planet1(theSun);
-}
+  // bind the VAO to draw
+  glBindVertexArray(planet_object.vertex_AO);
 
-void ApplicationSolar::Planet1(Planet p) const {
-	//matrix to make sphere
-	//glm::fmat4{} is a copy of the object that will hold the model matrix
-	//float(glfwGetTime()) is the rotation
-	//glm::fvec3{ 0.0f, 1.0f, 0.0f } is the rotation axis
-	glm::fmat4 model_matrix = glm::rotate(glm::fmat4{}, float(glfwGetTime()), glm::fvec3{ 0.0f, 1.0f, 0.0f });
-	//scale first!
-	model_matrix = glm::scale(model_matrix, glm::fvec3{ p.scaleX, p.scaleY, p.scaleZ });
-	//this line is for the translation of the sphere
-	model_matrix = glm::translate(model_matrix, glm::fvec3{ p.translationX, 0.0f, -1.0f });
-	
-
-	glUniformMatrix4fv(m_shaders.at("planet").u_locs.at("ModelMatrix"),
-		1, GL_FALSE, glm::value_ptr(model_matrix));
-
-	// extra matrix for normal transformation to keep them orthogonal to surface
-	glm::fmat4 normal_matrix = glm::inverseTranspose(glm::inverse(m_view_transform) * model_matrix);
-	glUniformMatrix4fv(m_shaders.at("planet").u_locs.at("NormalMatrix"),
-		1, GL_FALSE, glm::value_ptr(normal_matrix));
-
-	// bind the VAO to draw
-	glBindVertexArray(planet_object.vertex_AO);
-
-	// draw bound vertex array using bound shader
-	glDrawElements(planet_object.draw_mode, planet_object.num_elements, model::INDEX.type, NULL);
+  // draw bound vertex array using bound shader
+  glDrawElements(planet_object.draw_mode, planet_object.num_elements, model::INDEX.type, NULL);
 }
 
 void ApplicationSolar::updateView() {
@@ -110,7 +88,6 @@ void ApplicationSolar::keyCallback(int key, int scancode, int action, int mods) 
 //handle delta mouse movement input
 void ApplicationSolar::mouseCallback(double pos_x, double pos_y) {
   // mouse handling
-
 }
 
 // load shader programs
