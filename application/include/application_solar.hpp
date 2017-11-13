@@ -4,6 +4,7 @@
 #include "application.hpp"
 #include "model.hpp"
 #include "structs.hpp"
+#include "planet.h"
 
 // gpu representation of model
 class ApplicationSolar : public Application {
@@ -24,6 +25,9 @@ class ApplicationSolar : public Application {
 
   // draw all objects
   void render() const;
+  void upload_planet_transforms(Planet planet) const;
+  Planet * PlanetStrut() const;
+  Stars StarStrut() const;
 
  protected:
   void initializeShaderPrograms();
