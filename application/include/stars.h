@@ -9,7 +9,10 @@ public:
 	float zScale;
 
 	//colours
-	std::size_t R;
-	std::size_t G;
-	std::size_t B;
+	float blueF;
+	float redF;
+	float greenF;
+	float alphaf;
+
+	
 };

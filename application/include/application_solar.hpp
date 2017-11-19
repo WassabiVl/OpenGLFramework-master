@@ -4,7 +4,9 @@
 #include "application.hpp"
 #include "model.hpp"
 #include "structs.hpp"
+#include <string>
 #include "planet.h"
+
 
 // gpu representation of model
 class ApplicationSolar : public Application {
@@ -27,7 +29,7 @@ class ApplicationSolar : public Application {
   void render() const;
   void upload_planet_transforms(Planet planet) const;
   Planet * PlanetStrut() const;
-  Stars StarStrut() const;
+  void makeStars() const;
 
  protected:
   void initializeShaderPrograms();
@@ -36,6 +38,7 @@ class ApplicationSolar : public Application {
 
   // cpu representation of model
   model_object planet_object;
+  model_object star_object;
 };
 
 #endif
