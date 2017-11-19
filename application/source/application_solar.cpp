@@ -35,6 +35,8 @@ ApplicationSolar::ApplicationSolar(std::string const& resource_path)
 void ApplicationSolar::render() const {
 	// bind shader to upload uniforms
 	glUseProgram(m_shaders.at("planet").handle);
+	//Assgiment2 part 5, bind star shader program
+	glUseProgram(m_shaders.at("star").handle);
 
 	// assigment 1 part 5, iterate over the planet collection
 	Planet* planetStrut = PlanetStrut();
@@ -43,8 +45,6 @@ void ApplicationSolar::render() const {
 		upload_planet_transforms(planetStrut[i]);
 	}
 
-	//Assgiment2 part 5, bind star shader program
-	glUseProgram(m_shaders.at("star").handle);
 	// Assgiment 2 part 5, render the geometry as GL_POINTS draw stars _ ass2
 	makeStars();
 }
@@ -213,8 +213,7 @@ void ApplicationSolar::updateProjection() {
 	// upload Planet matrix to gpu
 	glUniformMatrix4fv(m_shaders.at("planet").u_locs.at("ProjectionMatrix"),
 		1, GL_FALSE, glm::value_ptr(m_view_projection));
-	// bind star shader program _ ass2
-		glUseProgram(m_shaders.at("star").handle);
+	
 	// upload StarMatrix to gpu
 	glUniformMatrix4fv(m_shaders.at("star").u_locs.at("ProjectionMatrix"),
 		1, GL_FALSE, glm::value_ptr(m_view_projection));
@@ -226,14 +225,11 @@ void ApplicationSolar::uploadUniforms() {
 
 	// bind new shader Planet
 	glUseProgram(m_shaders.at("planet").handle);
-
+	// bind new shader star
+	glUseProgram(m_shaders.at("star").handle);
 	updateView();
 	updateProjection();
 
-	// bind new shader star
-	//glUseProgram(m_shaders.at("star").handle);
-	//updateView();
-	//updateProjection();
 }
 
 // handle key input
@@ -294,8 +290,8 @@ void ApplicationSolar::initializeShaderPrograms() {
 	// Assgiment2 Part4, Duplicate of above code
 	m_shaders.emplace("star", shader_program{ m_resource_path + "shaders/simple.vert",
 		m_resource_path + "shaders/simple.frag" });
-	//m_shaders.at("star").u_locs["NormalMatrix"] = -1;
-	//m_shaders.at("star").u_locs["ModelMatrix"] = -1;
+	m_shaders.at("star").u_locs["NormalMatrix"] = -1;
+	m_shaders.at("star").u_locs["ModelMatrix"] = -1;
 	m_shaders.at("star").u_locs["ViewMatrix"] = -1;
 	m_shaders.at("star").u_locs["ProjectionMatrix"] = -1;
 
